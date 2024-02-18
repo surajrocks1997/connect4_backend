@@ -21,5 +21,6 @@ public class WebSocketEventListener {
     @EventListener
     public void handlerWebSocketConnectListener(SessionConnectEvent event) {
         String roomKey = Arrays.toString(event.getMessage().getPayload());
+        log.info(event.toString());
     }
 }
