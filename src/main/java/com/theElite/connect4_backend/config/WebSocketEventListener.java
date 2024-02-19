@@ -7,6 +7,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
 
 import java.util.Arrays;
 
@@ -21,6 +22,12 @@ public class WebSocketEventListener {
     @EventListener
     public void handlerWebSocketConnectListener(SessionConnectEvent event) {
         String roomKey = Arrays.toString(event.getMessage().getPayload());
-        log.info(event.toString());
+        log.info("from ConnectEvent: {}", event.toString());
+        log.info("fromConnectEvenet RoomKey - {}", roomKey);
+    }
+
+    @EventListener
+    public void handlerWebSocketConnectListener(SessionConnectedEvent event){
+        log.info("fromConnectedEvent : {}" + event);
     }
 }

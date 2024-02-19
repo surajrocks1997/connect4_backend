@@ -11,7 +11,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // Defines the WebSocket endpoint used by clients to connect to the server
         // This is the endpoint for connecting to the WebSocket
-        registry.addEndpoint("/ws-connect4").withSockJS();
+        registry.addEndpoint("/ws-connect4")
+                .setAllowedOrigins("http://localhost:3000")
+                .withSockJS();
     }
 
     @Override

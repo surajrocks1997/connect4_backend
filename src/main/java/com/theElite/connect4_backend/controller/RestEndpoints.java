@@ -10,9 +10,9 @@ import java.time.format.DateTimeFormatter;
 
 @RestController
 @Slf4j
+@CrossOrigin("http://localhost:3000")
 public class RestEndpoints {
 
-    @CrossOrigin("http://localhost:3000")
     @GetMapping("/generateRoomKey")
     public String generateKey() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("mmssddMM");
