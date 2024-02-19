@@ -3,15 +3,14 @@ package com.theElite.connect4_backend.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@RestController
+@org.springframework.web.bind.annotation.RestController
 @Slf4j
 @CrossOrigin("http://localhost:3000")
-public class RestEndpoints {
+public class RestController {
 
     @GetMapping("/generateRoomKey")
     public String generateKey() {

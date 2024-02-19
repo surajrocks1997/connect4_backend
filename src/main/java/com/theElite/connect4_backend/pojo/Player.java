@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Player {
-    private String userName;
+    private String username;
     private MessageType type;
 }

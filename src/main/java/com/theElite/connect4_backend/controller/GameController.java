@@ -25,11 +25,11 @@ public class GameController {
     @SendTo("/topic/{key}/key")
     public Player addUser(@Payload Player player, @DestinationVariable String key,
                           SimpMessageHeaderAccessor headerAccessor) {
+
         log.info("from addUser");
-        log.info(player.getUserName());
-        headerAccessor.getSessionAttributes().put("username", player.getUserName());
+        log.info(player.getUsername());
+        headerAccessor.getSessionAttributes().put("username", player.getUsername());
         List<WebSocketSession> list = roomManager.getConnectionsInRoom(key);
-        log.info("from addUser");
         return player;
     }
 }
