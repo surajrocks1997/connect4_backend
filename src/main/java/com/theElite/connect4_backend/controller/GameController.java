@@ -1,7 +1,7 @@
 package com.theElite.connect4_backend.controller;
 
 import com.theElite.connect4_backend.dao.RoomManager;
-import com.theElite.connect4_backend.pojo.MessageType;
+import com.theElite.connect4_backend.dao.SessionMapper;
 import com.theElite.connect4_backend.pojo.Player;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -20,42 +19,47 @@ import java.util.List;
 @Slf4j
 public class GameController {
     private RoomManager roomManager;
-    private final SimpMessageSendingOperations messageTemplate;
+    private SessionMapper sessionMapper;
 
     @MessageMapping("/game.addUser/{key}")
     @SendTo("/topic/{key}/key")
-    public Player addUser(@Payload Player player, @DestinationVariable String key,
-                          SimpMessageHeaderAccessor headerAccessor) {
+    public Player addUser(@Payload Player player, @DestinationVariable String key, SimpMessageHeaderAccessor headerAccessor) {
 
-        log.info("GAME.ADD_USER : {}", player.getUsername());
-        headerAccessor.getSessionAttributes().put("username", player.getUsername());
-        log.info(headerAccessor.getSessionId());
+        String sessionId = headerAccessor.getSessionId();
+        String username = player.getUsername();
 
-        roomManager.addConnectionToRoom(key, headerAccessor.getSessionId());
+        headerAccessor.getSessionAttributes().put("username", username);
+
+        roomManager.addConnectionToRoom(key, sessionId);
+        sessionMapper.mapSessionToRoom(sessionId, key);
+
+        log.info("GAME.ADD_USER : {}, Session ID: {}", username, sessionId);
 
         return player;
     }
 
     @MessageMapping("/game.removeUser/{key}")
     @SendTo("/topic/{key}/key")
-    public Player removeUser(@Payload Player player, @DestinationVariable String key) {
+    public Player removeUser(@Payload Player player, @DestinationVariable String key, SimpMessageHeaderAccessor headerAccessor) {
 
+        String sessionId = headerAccessor.getSessionId();
         String username = player.getUsername();
-        log.info("GAME.REMOVE_USER : {} Disconnected", username);
-//        List<String> list = roomManager.getConnectionsInRoom(key);
-//        list.remove(username);
-//        if (list.isEmpty()) {
-//            roomManager.deleteRoom(key);
-//            log.info("REMOVE USER: Room {} Deleted", key);
-//        }
 
-        log.info("REMOVE USER : User Disconnected: {}", username);
-        Player myPlayer = Player.builder()
-                .type(MessageType.LEAVE)
-                .username(username)
-                .build();
+        List<String> list = roomManager.getConnectionsInRoom(key);
 
-        messageTemplate.convertAndSend("/topic/" + key + "/key", myPlayer);
-        return myPlayer;
+        if (list.contains(sessionId)) {
+            list.remove(sessionId);
+        }
+        if (sessionMapper.containsSessionId(sessionId)) {
+            sessionMapper.removeSession(sessionId);
+        }
+
+        log.info("GAME.REMOVE_USER: {} Disconnected", username);
+
+        if (list.isEmpty()) {
+            roomManager.deleteRoom(key);
+            log.info("GAME.REMOVE_USER: Room {} Deleted", key);
+        }
+        return player;
     }
 }
