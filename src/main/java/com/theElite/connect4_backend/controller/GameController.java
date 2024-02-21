@@ -13,6 +13,8 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
+
 @Controller
 @AllArgsConstructor
 @Slf4j
@@ -27,9 +29,9 @@ public class GameController {
 
         log.info("GAME.ADD_USER : {}", player.getUsername());
         headerAccessor.getSessionAttributes().put("username", player.getUsername());
+        log.info(headerAccessor.getSessionId());
 
-//        List<String> list = roomManager.getConnectionsInRoom(key);
-//        list.add(player.getUsername());
+        roomManager.addConnectionToRoom(key, headerAccessor.getSessionId());
 
         return player;
     }

@@ -12,9 +12,9 @@ public class RoomManager {
         rooms = new HashMap<>();
     }
 
-    public void addConnectionToRoom(String roomKey, String username) {
+    public void addConnectionToRoom(String roomKey, String sessionId) {
         List<String> connections = rooms.getOrDefault(roomKey, new ArrayList<>());
-        connections.add(username);
+        connections.add(sessionId);
         rooms.put(roomKey, connections);
     }
 
