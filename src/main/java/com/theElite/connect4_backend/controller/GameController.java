@@ -1,9 +1,9 @@
 package com.theElite.connect4_backend.controller;
 
+import com.theElite.connect4_backend.dao.RoomManager;
 import com.theElite.connect4_backend.pojo.MessageType;
 import com.theElite.connect4_backend.pojo.Player;
-import com.theElite.connect4_backend.dao.RoomManager;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -13,10 +13,8 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
-
 @Controller
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Slf4j
 public class GameController {
     private RoomManager roomManager;
