@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @AllArgsConstructor
@@ -34,7 +35,11 @@ public class GameController {
         sessionMapper.mapSessionToRoom(sessionId, key);
 
         log.info("GAME.ADD_USER : {}, Session ID: {}", username, sessionId);
+        log.info("Connections in Room: {}", roomManager.getConnectionsInRoom(key).toString());
 
+        for (Map.Entry<String, String> entrySet : sessionMapper.getAllActiveSessions().entrySet()) {
+            log.info("SessionId: {}, RoomKey: {}", entrySet.getKey(), entrySet.getValue());
+        }
         return player;
     }
 

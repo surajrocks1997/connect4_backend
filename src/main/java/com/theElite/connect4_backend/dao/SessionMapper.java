@@ -24,7 +24,11 @@ public class SessionMapper {
         return this.sessionMap.get(sessionId);
     }
 
-    public boolean containsSessionId(String sessionId){
+    public boolean containsSessionId(String sessionId) {
         return sessionMap.containsKey(sessionId);
+    }
+
+    public Map<String, String> getAllActiveSessions() {
+        return sessionMap;
     }
 }

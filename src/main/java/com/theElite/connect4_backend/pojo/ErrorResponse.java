@@ -1,9 +1,17 @@
 package com.theElite.connect4_backend.pojo;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatusCode;
 
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@Builder
 public class ErrorResponse {
     private String timeStamp;
     private String errorMessage;
@@ -15,27 +23,4 @@ public class ErrorResponse {
         this.statusCode = statusCode;
     }
 
-    public String getTimeStamp() {
-        return timeStamp;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public HttpStatusCode getStatusCode() {
-        return statusCode;
-    }
-
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
-    public void setStatusCode(HttpStatusCode statusCode) {
-        this.statusCode = statusCode;
-    }
 }
