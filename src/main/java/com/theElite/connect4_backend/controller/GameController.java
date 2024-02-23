@@ -67,4 +67,10 @@ public class GameController {
         }
         return player;
     }
+
+    @MessageMapping("/game.startGame/{key}")
+    @SendTo("/topic/{key}/key")
+    public Player startGame(@Payload Player player, @DestinationVariable String key){
+        return player;
+    }
 }
