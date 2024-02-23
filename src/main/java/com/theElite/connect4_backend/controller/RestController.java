@@ -39,6 +39,12 @@ public class RestController {
         }
 
         return new ResponseEntity<>(true, HttpStatus.OK);
+    }
 
+    @GetMapping("/boardState")
+    public ResponseEntity<int[][]> initBoard() {
+        int[][] board = new int[6][7];
+        log.info("INIT BOARD");
+        return new ResponseEntity<>(board, HttpStatus.OK);
     }
 }
