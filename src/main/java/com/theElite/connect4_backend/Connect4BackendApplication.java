@@ -1,5 +1,6 @@
 package com.theElite.connect4_backend;
 
+import com.theElite.connect4_backend.dao.GameManager;
 import com.theElite.connect4_backend.dao.RoomManager;
 import com.theElite.connect4_backend.dao.SessionMapper;
 import org.springframework.boot.SpringApplication;
@@ -21,6 +22,11 @@ public class Connect4BackendApplication {
     @Bean
     public SessionMapper sessionMapper() {
         return new SessionMapper();
+    }
+
+    @Bean
+    public GameManager gameManager() {
+        return new GameManager();
     }
 
 

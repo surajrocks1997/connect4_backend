@@ -1,8 +1,11 @@
 package com.theElite.connect4_backend.controller;
 
+import com.theElite.connect4_backend.dao.GameManager;
 import com.theElite.connect4_backend.dao.RoomManager;
 import com.theElite.connect4_backend.dao.SessionMapper;
+import com.theElite.connect4_backend.pojo.Board;
 import com.theElite.connect4_backend.pojo.Player;
+import com.theElite.connect4_backend.pojo.PlayerMove;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -19,8 +22,10 @@ import java.util.Map;
 @AllArgsConstructor
 @Slf4j
 public class GameController {
+
     private RoomManager roomManager;
     private SessionMapper sessionMapper;
+    private GameManager gameManager;
 
     @MessageMapping("/game.addUser/{key}")
     @SendTo("/topic/{key}/key")
@@ -70,7 +75,23 @@ public class GameController {
 
     @MessageMapping("/game.startGame/{key}")
     @SendTo("/topic/{key}/key")
-    public Player startGame(@Payload Player player, @DestinationVariable String key){
+    public Player startGame(@Payload Player player, @DestinationVariable String key) {
+        gameManager.mapBoardToRoom(key, new Board());
         return player;
     }
+
+    @MessageMapping("/game.move/{key}")
+    @SendTo("/topic/{key}/game")
+    public PlayerMove move(@Payload PlayerMove playerMove, @DestinationVariable String key) {
+
+        gameManager.playMove(playerMove.getColIndex(), playerMove.getMoveIdentifier(), key);
+
+        return PlayerMove.builder()
+                .colIndex(playerMove.getColIndex())
+                .moveIdentifier(playerMove.getMoveIdentifier())
+                .board(gameManager.getBoard(key).getGrid())
+                .build();
+    }
+
+
 }
