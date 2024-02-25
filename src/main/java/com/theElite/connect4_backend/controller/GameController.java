@@ -84,12 +84,14 @@ public class GameController {
     @SendTo("/topic/{key}/game")
     public PlayerMove move(@Payload PlayerMove playerMove, @DestinationVariable String key) {
 
-        gameManager.playMove(playerMove.getColIndex(), playerMove.getMoveIdentifier(), key);
+        boolean hasWon = gameManager.playMove(playerMove.getColIndex(), playerMove.getMoveIdentifier(), key);
 
         return PlayerMove.builder()
                 .colIndex(playerMove.getColIndex())
                 .moveIdentifier(playerMove.getMoveIdentifier())
                 .board(gameManager.getBoard(key).getGrid())
+                .hasWon(hasWon)
+                .turn(playerMove.getMoveIdentifier() == 1  ? 2 : 1)
                 .build();
     }
 

@@ -11,4 +11,6 @@ public class PlayerMove {
     private int colIndex;
     private int moveIdentifier;
     private int[][] board;
+    private boolean hasWon;
+    private int turn;
 }

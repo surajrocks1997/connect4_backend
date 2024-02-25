@@ -22,8 +22,9 @@ public class GameManager {
         return game.get(roomKey);
     }
 
-    public void playMove(int colIndex, int moveIdentifier, String key) {
+    public boolean playMove(int colIndex, int moveIdentifier, String key) {
         Board board = game.get(key);
-        board.playMove(colIndex, BoardPosition.values()[moveIdentifier]);
+        int rowIndex = board.playMove(colIndex, BoardPosition.values()[moveIdentifier]);
+        return board.checkIfWon(rowIndex, colIndex, BoardPosition.values()[moveIdentifier]);
     }
 }
