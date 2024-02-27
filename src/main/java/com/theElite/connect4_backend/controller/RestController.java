@@ -1,5 +1,6 @@
 package com.theElite.connect4_backend.controller;
 
+import com.theElite.connect4_backend.dao.GameManager;
 import com.theElite.connect4_backend.dao.RoomManager;
 import com.theElite.connect4_backend.pojo.CustomException;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 public class RestController {
 
     private RoomManager roomManager;
+    private GameManager gameManager;
 
     @GetMapping("/generateRoomKey")
     public String generateKey() {
@@ -42,9 +45,9 @@ public class RestController {
     }
 
     @GetMapping("/boardState")
-    public ResponseEntity<int[][]> initBoard() {
-        int[][] board = new int[6][7];
-        log.info("INIT BOARD");
-        return new ResponseEntity<>(board, HttpStatus.OK);
+    public ResponseEntity<int[][]> initBoard(@RequestParam String roomKey) {
+        int[][] grid = this.gameManager.getBoard(roomKey).getGrid();
+        log.info("GET BOARD");
+        return new ResponseEntity<>(grid, HttpStatus.OK);
     }
 }
