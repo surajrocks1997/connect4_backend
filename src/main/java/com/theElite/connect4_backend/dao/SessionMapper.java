@@ -16,7 +16,7 @@ public class SessionMapper {
         this.sessionMap.put(sessionId, roomKey);
     }
 
-    public void removeSession(String sessionId) {
+    public void deleteSession(String sessionId) {
         this.sessionMap.remove(sessionId);
     }
 

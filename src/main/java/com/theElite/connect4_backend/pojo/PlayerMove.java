@@ -13,4 +13,5 @@ public class PlayerMove {
     private int[][] board;
     private boolean hasWon;
     private int turn;
+    private GameType type;
 }

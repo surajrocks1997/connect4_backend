@@ -27,4 +27,8 @@ public class GameManager {
         int rowIndex = board.playMove(colIndex, BoardPosition.values()[moveIdentifier]);
         return board.checkIfWon(rowIndex, colIndex, BoardPosition.values()[moveIdentifier]);
     }
+
+    public void deleteGame(String roomKey) {
+        this.game.remove(roomKey);
+    }
 }

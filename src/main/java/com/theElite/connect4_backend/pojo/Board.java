@@ -24,6 +24,11 @@ public class Board {
         }
     }
 
+    public int[][] resetGrid() {
+        this.grid = new int[rows][cols];
+        return this.grid;
+    }
+
     public int playMove(int colIndex, BoardPosition piece) {
         for (int row = this.rows - 1; row >= 0; row--) {
             if (this.grid[row][colIndex] == BoardPosition.EMPTY.ordinal()) {

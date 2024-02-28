@@ -4,6 +4,7 @@ import com.theElite.connect4_backend.dao.GameManager;
 import com.theElite.connect4_backend.dao.RoomManager;
 import com.theElite.connect4_backend.dao.SessionMapper;
 import com.theElite.connect4_backend.pojo.Board;
+import com.theElite.connect4_backend.pojo.GameType;
 import com.theElite.connect4_backend.pojo.Player;
 import com.theElite.connect4_backend.pojo.PlayerMove;
 import lombok.AllArgsConstructor;
@@ -61,7 +62,8 @@ public class GameController {
             list.remove(sessionId);
         }
         if (sessionMapper.containsSessionId(sessionId)) {
-            sessionMapper.removeSession(sessionId);
+            sessionMapper.deleteSession(sessionId);
+            log.info("GAME.REMOVE_USER: Session with SessionID {} & RoomKey {} Deleted", sessionId, key);
         }
 
         log.info("GAME.REMOVE_USER: {} Disconnected", username);
@@ -69,6 +71,8 @@ public class GameController {
         if (list.isEmpty()) {
             roomManager.deleteRoom(key);
             log.info("GAME.REMOVE_USER: Room {} Deleted", key);
+            gameManager.deleteGame(key);
+            log.info("GAME.REMOVE_USER: GAME with RoomKey {} Deleted", key);
         }
         return player;
     }
@@ -84,6 +88,17 @@ public class GameController {
     @SendTo("/topic/{key}/game")
     public PlayerMove move(@Payload PlayerMove playerMove, @DestinationVariable String key) {
 
+        if (playerMove.getType() == GameType.RESET) {
+            int[][] resetGrid = this.gameManager.getBoard(key).resetGrid();
+
+            return PlayerMove.builder()
+                    .board(resetGrid)
+                    .hasWon(false)
+                    .turn(playerMove.getTurn())
+                    .type(playerMove.getType())
+                    .build();
+        }
+
         boolean hasWon = gameManager.playMove(playerMove.getColIndex(), playerMove.getMoveIdentifier(), key);
 
         return PlayerMove.builder()
@@ -91,7 +106,8 @@ public class GameController {
                 .moveIdentifier(playerMove.getMoveIdentifier())
                 .board(gameManager.getBoard(key).getGrid())
                 .hasWon(hasWon)
-                .turn(playerMove.getMoveIdentifier() == 1  ? 2 : 1)
+                .turn(playerMove.getMoveIdentifier() == 1 ? 2 : 1)
+                .type(playerMove.getType())
                 .build();
     }
 

@@ -1,5 +1,6 @@
 package com.theElite.connect4_backend.config;
 
+import com.theElite.connect4_backend.dao.GameManager;
 import com.theElite.connect4_backend.dao.RoomManager;
 import com.theElite.connect4_backend.dao.SessionMapper;
 import com.theElite.connect4_backend.pojo.MessageType;
@@ -21,6 +22,7 @@ public class WebSocketEventListener {
 
     private RoomManager roomManager;
     private SessionMapper sessionMapper;
+    private GameManager gameManager;
     private final SimpMessageSendingOperations messageTemplate;
 
     @EventListener
@@ -36,10 +38,18 @@ public class WebSocketEventListener {
             list.remove(sessionId);
         }
         if (sessionMapper.containsSessionId(sessionId)) {
-            sessionMapper.removeSession(sessionId);
+            sessionMapper.deleteSession(sessionId);
+            log.info("GAME.REMOVE_USER: Session with SessionID {} & RoomKey {} Deleted", sessionId, roomKey);
         }
 
         log.info("DISCONNECT EVENT: Username {}", username);
+
+        if (list.isEmpty()) {
+            roomManager.deleteRoom(roomKey);
+            log.info("DISCONNECT EVENT: Room {} Deleted", roomKey);
+            gameManager.deleteGame(roomKey);
+            log.info("DISCONNECT EVENT: GAME with Room {} Deleted", roomKey);
+        }
 
         Player player = Player.builder()
                 .type(MessageType.LEAVE)

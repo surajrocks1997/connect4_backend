@@ -47,7 +47,14 @@ public class RestController {
     @GetMapping("/boardState")
     public ResponseEntity<int[][]> initBoard(@RequestParam String roomKey) {
         int[][] grid = this.gameManager.getBoard(roomKey).getGrid();
-        log.info("GET BOARD");
+        log.info("GET BOARD, Room Key - {}", roomKey);
         return new ResponseEntity<>(grid, HttpStatus.OK);
+    }
+
+    @GetMapping("/resetBoard")
+    public ResponseEntity<int[][]> resetBoard(@RequestParam String roomKey) {
+        int[][] resetGrid = this.gameManager.getBoard(roomKey).resetGrid();
+        log.info("Reset Grid. Room Key - {}", roomKey);
+        return new ResponseEntity<>(resetGrid, HttpStatus.OK);
     }
 }
