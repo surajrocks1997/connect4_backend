@@ -88,6 +88,13 @@ public class GameController {
     @SendTo("/topic/{key}/game")
     public PlayerMove move(@Payload PlayerMove playerMove, @DestinationVariable String key) {
 
+        if (playerMove.getType() == GameType.LEAVE) {
+            return PlayerMove.builder()
+                    .moveIdentifier(playerMove.getMoveIdentifier())
+                    .type(playerMove.getType())
+                    .build();
+        }
+
         if (playerMove.getType() == GameType.RESET) {
             int[][] resetGrid = this.gameManager.getBoard(key).resetGrid();
 

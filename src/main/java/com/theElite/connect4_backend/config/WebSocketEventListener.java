@@ -3,8 +3,10 @@ package com.theElite.connect4_backend.config;
 import com.theElite.connect4_backend.dao.GameManager;
 import com.theElite.connect4_backend.dao.RoomManager;
 import com.theElite.connect4_backend.dao.SessionMapper;
+import com.theElite.connect4_backend.pojo.GameType;
 import com.theElite.connect4_backend.pojo.MessageType;
 import com.theElite.connect4_backend.pojo.Player;
+import com.theElite.connect4_backend.pojo.PlayerMove;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -55,7 +57,12 @@ public class WebSocketEventListener {
                 .type(MessageType.LEAVE)
                 .username(username)
                 .build();
+        PlayerMove playerMove = PlayerMove.builder()
+                .type(GameType.LEAVE)
+                .build();
         messageTemplate.convertAndSend("/topic/" + roomKey + "/key", player);
+        messageTemplate.convertAndSend("/topic/" + roomKey + "/game", playerMove);
+
 
     }
 
